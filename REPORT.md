@@ -72,3 +72,45 @@
 ### Issues
 - The current site session/rate/anti-bot state is unstable: even `get_current_rate` can now land on `registration-with-confirmation`.
 - Because of that service-side redirect, the new commands are syntactically verified and error-handling verified, but the last live end-to-end rerun was blocked by the site rather than the local code.
+
+## 2026-04-08 Publish Update
+
+### Summary
+- Refactored the repo to use relative paths and env-driven runtime config instead of hardcoded `F:` paths.
+- Added `app.py` as a FastAPI/Vercel API wrapper around the existing Speech2Text runtime.
+- Added deploy artifacts: `.gitignore`, `.vercelignore`, `requirements.txt`, `vercel.json`, and a Vercel deploy button in `README.md`.
+- Published the repo to GitHub and deployed a Vercel preview.
+
+### Files
+- `s2t_config.py` - shared path/env resolution for local CLI and Vercel runtime.
+- `speech2text.py` - portable CLI with `--env-file`, `transcript`, and relative defaults.
+- `speech2text_site.py` - shared HTTP/browser runtime for queue, transcript fetch, and file transcription attempts.
+- `app.py` - FastAPI app exposing `/api/health`, `/api/rate`, `/api/queue/{job_id}`, `/api/transcript/{job_id}`, `/api/transcribe-file`, and `/api/transcribe-url`.
+- `speech2text.cmd` - repo-relative Windows launcher with optional `S2T_PYTHON_EXE`.
+- `README.md` - GitHub/Vercel usage guide and deploy button.
+- `collection/environments/local.bru.example` - safe Bruno env template without a live cookie.
+- `tests/test_transcript_parsing.py` - unit coverage for transcript parsing/formatting.
+
+### Rationale
+- The repo had to become cloneable and deployable before publishing; hardcoded portable paths would have broken both GitHub consumers and Vercel.
+- Cookie-based auth was moved to env/default resolution so the deploy can work without storing secrets in git.
+- The Vercel API wraps the same runtime code as the local CLI, which avoids maintaining two separate implementations.
+
+### Verification
+- `python -m py_compile s2t_config.py speech2text_site.py speech2text.py app.py` -> pass.
+- `python -m unittest discover -s tests -v` -> `2` tests passed.
+- `speech2text.cmd queue --job-id 2026-04-08-14-44-19-4909` -> exit code `0`, HTTP `200`.
+- `speech2text.cmd transcript --job-id 2026-04-08-14-44-19-4909 --timeout-seconds 15` -> transcript returned successfully.
+- Local `uvicorn app:app` smoke check -> `/api/health` and `/api/transcript/2026-04-08-14-44-19-4909?timecodes=true` returned `200`.
+- GitHub repo published: `https://github.com/VolcharaVasiliy/speech2text-cookie-api`.
+- Vercel preview ready: `https://speech2text-cookie-pp1jqae53-basils-projects-4f73ea6d.vercel.app`.
+- Latest pushed commit: `16f31d1fedcd24b666fd1f7c09d25d0e25bbe3db`.
+
+### Issues
+- `GET /api/rate` is currently returning the site's registration HTML instead of JSON; the same regression now appears in Bruno, so this is a live service-side state issue rather than only an API wrapper bug.
+- `transcribe-file` is still vulnerable to `registration-with-confirmation` redirects from `speech2text.ru`, even with a live cookie.
+- `transcribe-url` requires a local Chromium executable and is not a reliable Vercel path.
+
+### Next steps
+- Refresh the browser cookie/session if `speech2text.ru` stops accepting the current one.
+- If file upload must work from Vercel consistently, capture and replicate whatever extra anti-bot/browser signals the site currently expects.
