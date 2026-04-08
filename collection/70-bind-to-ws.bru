@@ -1,0 +1,33 @@
+meta {
+  name: Bind To WS
+  type: http
+  seq: 70
+  tags: [
+    speech2text
+    ws
+    api
+  ]
+}
+
+post {
+  url: {{base_url}}/bind-to-ws
+  body: json
+  auth: none
+}
+
+headers {
+  Accept: */*
+  Content-Type: application/json
+  Referer: {{base_url}}/
+  Cookie: {{cookie_header}}
+}
+
+body:json {
+  {
+    "client_id": "{{client_id}}"
+  }
+}
+
+docs {
+  Mirrors the JSON POST used by `ws-speech2text.js` when a websocket client id is available.
+}

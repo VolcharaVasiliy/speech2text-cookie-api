@@ -1,0 +1,24 @@
+meta {
+  name: Download TXT
+  type: http
+  seq: 40
+  tags: [
+    speech2text
+    txt
+    download
+  ]
+}
+
+get {
+  url: {{base_url}}/a-list?to_txt={{audio_file_name}}&fromiframe=1
+}
+
+headers {
+  Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+  Referer: {{base_url}}/a-list?conver_new_file={{job_id}}
+  Cookie: {{cookie_header}}
+}
+
+docs {
+  Downloads text output for the provided audio filename.
+}

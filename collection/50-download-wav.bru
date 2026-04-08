@@ -1,0 +1,24 @@
+meta {
+  name: Download WAV
+  type: http
+  seq: 50
+  tags: [
+    speech2text
+    wav
+    download
+  ]
+}
+
+get {
+  url: {{base_url}}/a-list?to_wav={{audio_file_name}}&conver_new_file={{job_id}}&fromiframe=1
+}
+
+headers {
+  Accept: */*
+  Referer: {{base_url}}/a-list?conver_new_file={{job_id}}
+  Cookie: {{cookie_header}}
+}
+
+docs {
+  Downloads wav content for the provided job id and audio filename.
+}

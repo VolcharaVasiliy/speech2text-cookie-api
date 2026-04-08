@@ -1,0 +1,24 @@
+meta {
+  name: Get CSRF Token
+  type: http
+  seq: 60
+  tags: [
+    speech2text
+    csrf
+    api
+  ]
+}
+
+get {
+  url: {{base_url}}/yii/security/csrf-token
+}
+
+headers {
+  Accept: application/json,text/plain,*/*
+  Referer: {{base_url}}/
+  Cookie: {{cookie_header}}
+}
+
+docs {
+  Fetches the CSRF token endpoint captured during page startup.
+}

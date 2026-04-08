@@ -1,0 +1,24 @@
+meta {
+  name: Get Current Rate
+  type: http
+  seq: 15
+  tags: [
+    speech2text
+    rate
+    api
+  ]
+}
+
+get {
+  url: {{base_url}}/a-list?get_current_rate=1
+}
+
+headers {
+  Accept: */*
+  Referer: {{base_url}}/a-list
+  Cookie: {{cookie_header}}
+}
+
+docs {
+  Polls the current rate endpoint seen in the capture.
+}

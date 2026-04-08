@@ -1,0 +1,24 @@
+meta {
+  name: Open Job
+  type: http
+  seq: 20
+  tags: [
+    speech2text
+    job
+    html
+  ]
+}
+
+get {
+  url: {{base_url}}/a-list?conver_new_file={{job_id}}
+}
+
+headers {
+  Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+  Referer: {{base_url}}/
+  Cookie: {{cookie_header}}
+}
+
+docs {
+  Opens a job page by the captured `conver_new_file` identifier.
+}

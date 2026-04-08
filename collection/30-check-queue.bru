@@ -1,0 +1,24 @@
+meta {
+  name: Check Queue
+  type: http
+  seq: 30
+  tags: [
+    speech2text
+    queue
+    api
+  ]
+}
+
+get {
+  url: {{base_url}}/a-list?check_queue={{job_id}}
+}
+
+headers {
+  Accept: */*
+  Referer: {{base_url}}/a-list?conver_new_file={{job_id}}
+  Cookie: {{cookie_header}}
+}
+
+docs {
+  Polls the queue status for a job id.
+}

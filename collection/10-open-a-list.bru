@@ -1,0 +1,24 @@
+meta {
+  name: Open A-List
+  type: http
+  seq: 10
+  tags: [
+    speech2text
+    list
+    html
+  ]
+}
+
+get {
+  url: {{base_url}}/a-list
+}
+
+headers {
+  Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+  Referer: {{base_url}}/
+  Cookie: {{cookie_header}}
+}
+
+docs {
+  Main list page observed in the browser capture.
+}
